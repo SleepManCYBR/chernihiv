@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHERNIHIV RP | ПРАВИЛА</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Зовнішній CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<canvas id="particles-bg"></canvas>
+<div class="bottom-glow"></div>
+
+<header>
+    <div class="nav-btn">ПРАВИЛА CHERNIHIV RP</div>
+</header>
+
+<div class="content-wrapper">
+    <div class="main-hero">
+        <img src="https://i.ibb.co/209d40Ld/Untitled129-20260206202010.png" alt="CHERNIHIV RP Logo">
+    </div>
+    <div class="rules-grid" id="rulesList"></div>
+</div>
+
+<div id="modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close" onclick="closeModal()">×</span>
+        <h2 id="modalTitle"></h2>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+const rules = [
+    { num: 1, title: "Повага, антибулінг, особистий простір", icon: "fa-handshake-angle",
+      items: [{ sub: "§1", text: "Образи, булінг, порушення особистого простору. Поважайте інших персонажів та не використовуйте образи як спосіб відігравання RP.", penalty: "Попередження або штраф 5000€", type: "fine" }]},
+    { num: 2, title: "ПДР (Правила дорожнього руху)", icon: "fa-car",
+      items: [
+        { sub: "§2.1", text: "Неправильне паркування (не на паркінгах).", penalty: "Штраф 4000€", type: "fine" },
+        { sub: "§2.2", text: "Розворот у заборонених місцях (мости, тунелі тощо).", penalty: "Штраф 3000€", type: "fine" },
+        { sub: "§2.3", text: "Їзда по зустрічній смузі (крім дозволених випадків).", penalty: "Штраф 4000€", type: "fine" },
+        { sub: "§2.4", text: "Неввімкнені фари в темний час / погану видимість / поза містом.", penalty: "Штраф 3000€", type: "fine" },
+        { sub: "§2.5", text: "Проїзд на червоний сигнал світлофора.", penalty: "Автоматичний штраф 100€", type: "fine" },
+        { sub: "§2.6", text: "Надмірне перевищення швидкості (>200 км/год).", penalty: "Штраф 4000€", type: "fine" },
+        { sub: "§2.7", text: "Об'їзд шлагбаума на залізничному переїзді.", penalty: "Штраф 4000€", type: "fine" },
+        { sub: "§2.8", text: "Невикористання поворотників / аварійки при русі заднім ходом.", penalty: "Штраф 5000€", type: "fine" },
+        { sub: "§2.9", text: "Рух поза дорогами (поля, узбіччя тощо).", penalty: "Штраф 3500€", type: "fine" },
+        { sub: "§2.10", text: "Необережна їзда (вихляння).", penalty: "Штраф 2000€", type: "fine" },
+        { sub: "§2.11", text: "Не зниження швидкості до 30 км/год перед пішохідним переходом.", penalty: "Штраф 1500€ (водій) / 2500€ (пішоходи)", type: "fine" },
+        { sub: "§2.12", text: "Порушення черги на коловому русі.", penalty: "Штраф 2000€", type: "fine" },
+        { sub: "§2.13", text: "Обгін у заборонених місцях (переходи, суцільна лінія тощо).", penalty: "Штраф 4000€", type: "fine" },
+        { sub: "§2.14", text: "Втеча з місця ДТП.", penalty: "Попередження або штраф 4000€", type: "fine" },
+        { sub: "§2.15", text: "Рух мопедів/скутерів не по крайній правій смузі або на автомагістралі.", penalty: "Штраф 4000€ або попередження", type: "fine" },
+        { sub: "§2.15", text: "Сільськогосподарський транспорт у місті.", penalty: "Штраф 4000€ або депорт до 1 доби", type: "severe" },
+        { sub: "§2.16", text: "Ігнорування вимоги зупинки під час погоні.", penalty: "Штраф 3500€ або депорт до 2 діб", type: "severe" },
+        { sub: "§2.18", text: "Використання маячків без службової необхідності.", penalty: "Штраф 1700€", type: "fine" }
+      ]},
+    { num: 3, title: "Зелені зони (Green Zone)", icon: "fa-shield-halved",
+      items: [
+        { sub: "§3.1", text: "Перебування в розшуку в зеленій зоні (без винятків).", penalty: "Вихід за 1 хвилину", type: "fine" },
+        { sub: "§3.2", text: "Перебувати зі зброєю в руках у зеленій зоні.", penalty: "Штраф 4000$", type: "fine" },
+        { sub: "", text: "Провокувати конфлікти, ображати, розпочинати бійки в ГЗ.", penalty: "Штраф / депорт (залежить від тяжкості)", type: "severe" },
+        { sub: "", text: "Діставати/демонструвати/використовувати зброю в ГЗ.", penalty: "Штраф 4000$", type: "fine" },
+        { sub: "", text: "Перебувати в масці / приховувати обличчя в ГЗ.", penalty: "Штраф / депорт", type: "severe" }
+      ],
+      image: "https://i.ibb.co/Jwg1zCvD/photo-2026-02-06-20-35-35-Photoroom.png"
+    },
+    { num: 4, title: "КПП та блокпости", icon: "fa-road-barrier",
+      items: [
+        { sub: "§4.1", text: "Ігнорування вимоги зупинки на КПП.", penalty: "Штраф 5500€", type: "fine" },
+        { sub: "§4.2", text: "Використання зброї на КПП.", penalty: "Штраф 8000€", type: "fine" },
+        { sub: "§4.3", text: "Не повідомлення про наявність зброї на КПП.", penalty: "Штраф / депорт", type: "severe" },
+        { sub: "§4.4", text: "Відмова від перевірки документів.", penalty: "Штраф 4000€", type: "fine" },
+        { sub: "§4.5", text: "Перевірка транспорту без RP-причини (з боку поліції).", penalty: "Штраф 6000€", type: "fine" }
+      ],
+      image: "https://i.ibb.co/99bXHxHM/photo-2026-02-06-20-35-46-Photoroom.png"
+    },
+    { num: 5, title: "Зброя та ліцензія", icon: "fa-gun",
+      items: [
+        { sub: "§5.1", text: "Використання зброї без ліцензії.", penalty: "Штраф 3000€", type: "fine" },
+        { sub: "§5.2", text: "Використання зброї без обґрунтованих RP-причин.", penalty: "Депорт 1 день або штраф 8000€", type: "severe" },
+        { sub: "§5.3", text: "Відкрите носіння зброї.", penalty: "Штраф 5000€", type: "fine" },
+        { sub: "§5.4", text: "Використання зброї у людному місці без підстав.", penalty: "Штраф 7000€", type: "fine" },
+        { sub: "§5.5", text: "Передача зброї третім особам.", penalty: "Штраф 5000€", type: "fine" }
+      ]},
+    { num: 6, title: "Рейди", icon: "fa-bomb",
+      items: [{ sub: "", text: "Проведення рейдів, що створюють хаос без вагомої RP-причини.", penalty: "Безстрокова депортація", type: "severe" }]},
+    { num: 7, title: "Атака / DeathMatch", icon: "fa-skull",
+      items: [
+        { sub: "§7.1", text: "RDM (Random DeathMatch).", penalty: "Депорт 1 день або штраф 8000€", type: "severe" },
+        { sub: "§7.2", text: "VDM (Vehicle DeathMatch).", penalty: "Депорт 1 день або штраф 8000€", type: "severe" },
+        { sub: "§7.3", text: "DM (напад без RP-причин) від 2 ударів.", penalty: "Штраф від 1500€ (залежить від тяжкості)", type: "fine" },
+        { sub: "§7.4", text: "RK (Revenge Kill).", penalty: "Депорт 1 день", type: "severe" },
+        { sub: "§7.5", text: "PG (PowerGaming – нереалістичні дії).", penalty: "Штраф 6500€", type: "fine" },
+        { sub: "§7.6", text: "Відсутність Fear RP.", penalty: "Депорт 1 доба або штраф 8000€", type: "severe" },
+        { sub: "§7.7", text: "NRP (нереалістична поведінка).", penalty: "Депорт 1–10 днів або штраф 8000€", type: "severe" }
+      ]},
+    { num: 8, title: "Зовнішній вигляд / скіни", icon: "fa-user",
+      items: [
+        { sub: "§8.1", text: "Образливі скіни, форма спецслужб, провокаційні ніки.", penalty: "Попередження → тимчасовий / постійний депорт", type: "severe" },
+        { sub: "§8.2", text: "Скіни тварин без правильного відігравання.", penalty: "Депорт до 5 діб (або до 3 діб для аніматорів)", type: "severe" }
+      ]},
+    { num: 9, title: "Уникнення покарання", icon: "fa-ban",
+      items: [{ sub: "", text: "Обхід штрафів, банів через твінки тощо.", penalty: "Депорт до 3 діб / назавжди (при обході бану)", type: "severe" }]},
+    { num: 10, title: "Non-RP поведінка", icon: "fa-robot",
+      items: [
+        { sub: "§10.1", text: "Combat Logging (вихід під час RP).", penalty: "Депорт 1 день", type: "severe" },
+        { sub: "§10.2", text: "MetaGaming.", penalty: "Депорт 1 день", type: "severe" },
+        { sub: "§10.3", text: "PowerGaming.", penalty: "Штраф 7500€ або депорт 1 день", type: "severe" },
+        { sub: "§10.4", text: "Fail RP.", penalty: "Штраф 4500€ або депорт 1 день", type: "severe" },
+        { sub: "§10.5", text: "Відсутність Fear RP.", penalty: "Депорт 1 день", type: "severe" },
+        { sub: "§10.6", text: "CopBaiting.", penalty: "Штраф 6700€ або депорт 1 день", type: "severe" },
+        { sub: "§10.7", text: "Вбивство AFK персонажа.", penalty: "Штраф 8000€", type: "fine" },
+        { sub: "§10.8", text: "Bug Abuse.", penalty: "Депорт 1 день", type: "severe" }
+      ]},
+    { num: 11, title: "NRP кафф (поліція)", icon: "fa-handcuffs",
+      items: [
+        { sub: "§11.1", text: "Кафф без RP-причини.", penalty: "Штраф 6000€", type: "fine" },
+        { sub: "§11.2", text: "Перегляд планшету для перевірки без підстав.", penalty: "Штраф 6000€", type: "fine" },
+        { sub: "§11.3", text: "Фарм XP без дозволу громадянина.", penalty: "Штраф 2000€", type: "fine" },
+        { sub: "§11.4", text: "Кафф для помсти/тролінгу.", penalty: "Штраф 3100€", type: "fine" },
+        { sub: "§11.5", text: "Використання тайзера без RP-причин.", penalty: "Штраф 3500€", type: "fine" },
+        { sub: "§11.6", text: "Використання тайзера у green zone без причин.", penalty: "Штраф 3500€", type: "fine" },
+        { sub: "§11.7", text: "Відходити далі ніж на 10 метрів від офіцера в кайданах.", penalty: "Штраф 1400€", type: "fine" },
+        { sub: "§11.8", text: "Застосування сили під час затримання без необхідності.", penalty: "Штраф 3500€", type: "fine" }
+      ]},
+    { num: 12, title: "Суд", icon: "fa-gavel",
+      items: [
+        { sub: "§12.1", text: "Тиск на суддю/офіцера/адвоката.", penalty: "Штраф 2500€", type: "fine" },
+        { sub: "§12.2", text: "Прикриття знайомих або друзів суддею.", penalty: "Зняття з посади", type: "severe" },
+        { sub: "§12.3", text: "Халатність з боку судді.", penalty: "Штраф 3000€", type: "fine" },
+        { sub: "§12.4", text: "Використання суддівських повноважень для особистої вигоди.", penalty: "Зняття з посади", type: "severe" },
+        { sub: "§12.5", text: "Неадекватна поведінка в залі суду.", penalty: "Штраф 1200€", type: "fine" },
+        { sub: "§12.6", text: "Перебивання Судді/Адвоката.", penalty: "Штраф 1200€", type: "fine" },
+        { sub: "§12.7", text: "Напад/бійка у залі суду.", penalty: "КПЗ", type: "severe" },
+        { sub: "§12.8", text: "Ігнорування рішення суду.", penalty: "Депорт 1 день", type: "severe" },
+        { sub: "§12.9", text: "Ігнорування RP-зауваження охорони суду.", penalty: "Депорт 1 день", type: "severe" },
+        { sub: "§12.10", text: "Кафф без RP-причин.", penalty: "Депорт 1 день", type: "severe" },
+        { sub: "§12.11", text: "Знаходитися на території залу суду можуть тільки адвокати, судді, офіцери та затримані.", penalty: "Штраф 3000€", type: "fine" }
+      ]},
+    { num: 13, title: "Голосовий чат", icon: "fa-microphone",
+      items: [
+        { sub: "§13.2", text: "Сторонні гучні звуки, музика без згоди.", penalty: "Штраф 5000€ або депорт до 3 діб", type: "severe" },
+        { sub: "§13.3", text: "Російська пропаганда.", penalty: "Депорт назавжди", type: "severe" },
+        { sub: "§13.3", text: "Російська музика в голосовому чаті.", penalty: "Депорт до 2 діб", type: "severe" },
+        { sub: "§13.5", text: "Перебивання, створення шуму в голосовому чаті.", penalty: "Депорт до 2 діб або кік", type: "severe" }
+      ]},
+    { num: 14, title: "Спам та реклама", icon: "fa-comment-slash",
+      items: [{ sub: "", text: "Спам в чаті, масові запрошення в групи тощо.", penalty: "Тимчасовий / постійний депорт", type: "severe" }]},
+    { num: 15, title: "Мітінг", icon: "fa-users",
+      items: [
+        { sub: "§15.1", text: "Використання зброї на мітингу.", penalty: "Штраф 8000€", type: "fine" },
+        { sub: "§15.2", text: "Участь у мітингу.", penalty: "Штраф 1000€", type: "fine" },
+        { sub: "§15.3", text: "Перекриття дороги під час мітингу.", penalty: "Штраф 5000€", type: "fine" },
+        { sub: "§15.4", text: "Використання піротехніки на мітингу.", penalty: "Штраф 8000€", type: "fine" }
+      ]},
+    { num: 16, title: "Bunnyhop (Bhop)", icon: "fa-person-running",
+      items: [{ sub: "", text: "Безперервні стрибки для прискорення / переваги в бою.", penalty: "Попередження → депорт 2 доби", type: "severe" }]},
+    { num: 17, title: "Корупція", icon: "fa-hand-holding-dollar",
+      items: [
+        { sub: "§17.1", text: "Пропозиція хабара.", penalty: "Штраф від 4000–16000€", type: "fine" },
+        { sub: "§17.2", text: "Прийняття хабара.", penalty: "Штраф 5500€", type: "fine" },
+        { sub: "§17.3", text: "Посередництво у корупційних діях.", penalty: "Штраф 4000€", type: "fine" },
+        { sub: "§17.4", text: "Приховування корупції.", penalty: "Штраф 5000€", type: "fine" }
+      ]},
+    { num: 18, title: "Привласнення території", icon: "fa-house",
+      items: [
+        { sub: "§18.1", text: "Незаконне привласнення чужої території.", penalty: "Штраф 4500€ або депорт до 2 діб", type: "severe" },
+        { sub: "§18.2", text: "Проникнення на чужу привласнену територію.", penalty: "Попередження або штраф 4500€", type: "fine" },
+        { sub: "§18.3", text: "Перешкоджання діям екстрених служб.", penalty: "Штраф 4500€", type: "fine" }
+      ]},
+    { num: 19, title: "Чити та баги", icon: "fa-bug",
+      items: [{ sub: "", text: "Використання читів, стороннього ПЗ, багів.", penalty: "Безстрокова депортація", type: "severe" }]},
+    { num: 20, title: "Вихід під час RP", icon: "fa-door-open",
+      items: [{ sub: "", text: "Вихід з сервера під час активної RP-сцени / переслідування.", penalty: "Попередження → депорт 4 доби", type: "severe" }]},
+    { num: 21, title: "Сніжки", icon: "fa-snowflake",
+      items: [
+        { sub: "§21.1", text: "Безпідставне використання сніжок.", penalty: "Попередження → депорт 2 доби", type: "severe" },
+        { sub: "§21.2", text: "Використання сніжок без згоди гравця.", penalty: "Попередження → депорт 1 доба", type: "severe" },
+        { sub: "§21.3", text: "Зловживання під час PVP-сцен.", penalty: "Попередження → депорт 1 доба", type: "severe" },
+        { sub: "§21.4", text: "Кидання сніжок у службовців під час виконання обов’язків.", penalty: "Попередження або депорт до 2 діб", type: "severe" }
+      ]},
+    { num: 22, title: "Процесуальні дії", icon: "fa-gavel",
+      items: [
+        { sub: "§22.1", text: "Непредставлення (ім'я, звання, підрозділ).", penalty: "Штраф 1500€", type: "fine" },
+        { sub: "§22.2", text: "Відсутність відеофіксації затримання.", penalty: "Штраф 2500€", type: "fine" },
+        { sub: "§22.3", text: "Не роз'яснення прав (Міранда).", penalty: "Штраф 4500€", type: "fine" },
+        { sub: "§22.4", text: "Не опис складу злочину.", penalty: "Штраф 2500€", type: "fine" },
+        { sub: "§22.5", text: "Не оголошення статей затриманому.", penalty: "Штраф 3500€", type: "fine" }
+      ]}
+];
+
+function renderRules() {
+    const container = document.getElementById("rulesList");
+    rules.forEach(rule => {
+        const btn = document.createElement("div");
+        btn.className = "rule-btn";
+        btn.innerHTML = `
+            <span class="rule-number">${rule.num}</span>
+            <i class="fa ${rule.icon}"></i>
+            <span>${rule.title}</span>
+        `;
+        btn.onclick = () => openModal(rule);
+        container.appendChild(btn);
+    });
+}
+
+function openModal(rule) {
+    document.getElementById("modalTitle").textContent = `${rule.num}. ${rule.title}`;
+   
+    let html = "";
+    if (rule.image) {
+        html += `<img src="${rule.image}" class="map-img" alt="Мапа">`;
+    }
+    rule.items.forEach(item => {
+        html += `
+            <div class="rule-item">
+                ${item.sub ? `<h4>${item.sub}</h4>` : ""}
+                <p>${item.text}</p>
+                <div class="penalty ${item.type}">ПОКАРАННЯ: ${item.penalty}</div>
+            </div>
+        `;
+    });
+    document.getElementById("modalBody").innerHTML = html;
+    document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal(e) {
+    if (!e || e.target.id === "modal" || e.target.className === "close") {
+        document.getElementById("modal").style.display = "none";
+    }
+}
+
+// Particles
+const canvas = document.getElementById("particles-bg");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.onresize = resize;
+resize();
+
+const particles = [];
+for(let i = 0; i < 80; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: canvas.height + Math.random() * 300,
+        size: Math.random() * 2.2 + 0.8,
+        speed: Math.random() * 0.6 + 0.2,
+        alpha: Math.random() * 0.4 + 0.15
+    });
+}
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+   
+    particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(57, 255, 20, ${p.alpha * 0.1})`;
+        ctx.shadowBlur = 30;
+        ctx.shadowColor = '#39ff14';
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(57, 255, 20, ${p.alpha * 0.25})`;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#39ff14';
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha * 0.4})`;
+        ctx.shadowBlur = 4;
+        ctx.shadowColor = '#ffffff';
+        ctx.fill();
+        
+        p.y -= p.speed;
+        if (p.y < -30) {
+            p.y = canvas.height + 100;
+            p.x = Math.random() * canvas.width;
+        }
+    });
+    
+    requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+renderRules();
+</script>
+</body>
+</html>
