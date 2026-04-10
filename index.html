@@ -8,7 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;500;700;900&display=swap');
         :root {
-            --green: #7fff00;              /* блідіший зелений */
+            --green: #7fff00;              
             --green-glow: rgba(127, 255, 0, 0.45);
             --glass-bg: rgba(20, 30, 25, 0.25);
             --glass-border: rgba(127, 255, 0, 0.28);
@@ -493,7 +493,7 @@ function closeModal(e) {
     }
 }
 
-// Particles — без змін (як було в оригіналі)
+
 const canvas = document.getElementById("particles-bg");
 const ctx = canvas.getContext("2d");
 function resize() {
@@ -518,7 +518,7 @@ function animateParticles() {
     particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(127, 255, 0, ${p.alpha * 0.1})`; // змінено тільки rgb
+        ctx.fillStyle = `rgba(127, 255, 0, ${p.alpha * 0.1})`; 
         ctx.shadowBlur = 30;
         ctx.shadowColor = '#7fff00';
         ctx.fill();
