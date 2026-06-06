@@ -483,8 +483,15 @@ const rules = [
 { sub: "§26.2", text: "На приїзд перемовника є 10 хвилин.", penalty: "Штраф 4500", type: "fine" },
 { sub: "§26.3", text: "Не було викликано перемовника на місце переговорів.", penalty: "Депорт 1 доба", type: "severe" },
 { sub: "§26.4", text: "Було висуното великі вимоги.", penalty: "Штурм території", type: "severe" }
+]},
+    { num: 27, title: "Домагання", icon: "fa-hand-holding-hand",
+     items: [
+{ sub: "§27.1", text: "Звичайне домагання до гравця, якому немає 18 років.", penalty: "Бан 30 днів", type: "severe" },
+{ sub: "§27.2", text: "Домагання до особи віком до 18 років з боку учасника держ. фракції.", penalty: "Зняття з посади + бан 10 днів", type: "severe" },
+{ sub: "§27.3", text: "Отигровка 18+ контенту без попередньої згоди іншого гравця.", penalty: "КПЗ 120 хв / Депорт 1 доба", type: "severe" },
+{ sub: "§27.4", text: "Примусова отигровка дій сексуального характеру (без згоди).", penalty: "Депорт 3-5 діб / Бан", type: "severe" }
 ]}
-];
+
 
 function renderRules() {
     const container = document.getElementById("rulesList");
